@@ -11,11 +11,10 @@ namespace Shoping.Business
         public UnitOfWork<TEntity> UnitOfWork { get; set; }
         public Repository<TEntity> Repository { get; set; }
         public IConfiguration IConfiguration { get; set; }
-        public BaseBusiness(string _dbName)
+        public BaseBusiness(IConfiguration iConfiguration, string type)
         {
-            var _dbName = icon
-            var iConfiguration = App.iConfiguration;
-            var type = iConfiguration.GetSection("Database").GetSection("DBType").Value;
+            IConfiguration = iConfiguration;
+            var _dbName = IConfiguration.GetSection("Database").GetSection("DatabaseName").Value;
             DbContext dbContext = null;
             switch (type)
             {

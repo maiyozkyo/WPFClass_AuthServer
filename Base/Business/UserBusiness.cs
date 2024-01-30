@@ -1,4 +1,7 @@
-﻿using Shoping.Data_Access.Models;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Shoping.Data_Access.DTOs;
+using Shoping.Data_Access.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,43 +12,24 @@ namespace Shoping.Business
 {
     public class UserBusiness : BaseBusiness<User>, IUserBusiness
     {
-        public UserBusiness(string _dbName) : base(_dbName)
+        public UserBusiness(IConfiguration configuration, string type) : base(configuration, type)
         {
         }
 
-        public async Task<User> AddUpdateUserAsync(User user)
+        public async Task<UserDTO> GetUserAsync(string email, string password)
         {
             try
             {
-                if (user == null)
-                {
-                    return null;
-                }
-
-                var addedUser = await Repository.GetOneAsync(x => x.Email == user.Email);
-                if (addedUser != null)
-                {
-                    addedUser.ModifiedOn = DateTime.Now;
-                    return addedUser;
-                }
-                else
-                {
-                    user.CreatedOn = DateTime.Now;
-                    Repository.Add(user);
-                }
-                await UnitOfWork.SaveChangesAsync();
-                return user;
+                var user = await Repository.GetOneAsync(x => x.Email == email && password == x.Password);
+                var userDTO = new UserDTO();
+                userDTO = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(user));
+                return userDTO;
             }
             catch (Exception ex)
             {
                 return null;
             }
-
-        }
-        public async Task<User> GetUserAsync(string email, string password)
-        {
-            var user = await Repository.GetOneAsync(x => x.Email == email && password == x.Password);
-            return user;
+            
         }
 
     }
