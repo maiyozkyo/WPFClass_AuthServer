@@ -8,6 +8,7 @@ namespace Shoping.Data_Access.DTOs
 {
     public class UserDTO
     {
+        public Guid RecID { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -15,5 +16,6 @@ namespace Shoping.Data_Access.DTOs
         public DateTime ModifiedOn { get; set; }
         public string ModifiedBy { get; set; }
         public bool IsTrial { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -15,12 +15,20 @@ namespace Auth.Controllers
             UserBusiness = new UserBusiness(iconfiguration, "MongoDB");
         }
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(Dictionary<string ,object> dict)
         {
             string Email = dict["Email"].ToString();
             string Password = dict["Password"].ToString();
             var userReponseDTO = await UserBusiness.GetUserAsync(Email, Password);
+            return Ok(userReponseDTO);
+        }
+
+        [HttpPost("AddUpdate")]
+        public async Task<IActionResult> AddUpdateUserAsync(Dictionary<string, object> dict)
+        {
+            var jsonUser = dict["User"].ToString();
+            var userReponseDTO = await UserBusiness.AddUpdateUserAsync(jsonUser);
             return Ok(userReponseDTO);
         }
     }

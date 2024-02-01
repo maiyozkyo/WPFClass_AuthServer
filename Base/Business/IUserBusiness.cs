@@ -10,6 +10,7 @@ namespace Shoping.Business
 {
     public interface IUserBusiness
     {
+        public Task<UserDTO> AddUpdateUserAsync(string jsonUser);
         public Task<UserDTO> GetUserAsync(string email, string password);
     }
 }

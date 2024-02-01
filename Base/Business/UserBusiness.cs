@@ -16,6 +16,44 @@ namespace Shoping.Business
         {
         }
 
+        public async Task<UserDTO> AddUpdateUserAsync(string jsonUser)
+        {
+            if (string.IsNullOrEmpty(jsonUser))
+            {
+                return null;
+            }
+
+            var user = JsonConvert.DeserializeObject<UserDTO>(jsonUser);
+            if (user != null)
+            {
+                var objUser = await Repository.GetOneAsync(x => x.RecID == user.RecID);
+                if (objUser != null)
+                {
+                    objUser.IsTrial = user.IsTrial;
+                    objUser.ModifiedOn = user.ModifiedOn;
+                    objUser.ModifiedBy = user.ModifiedBy;
+                }
+                else
+                {
+                    objUser = new User
+                    {
+                        CreatedBy = user.CreatedBy,
+                        CreatedOn = user.CreatedOn,
+                        Email = user.Email,
+                        UserName = user.UserName,
+                        IsTrial = user.IsTrial,
+                        Password = user.Password,
+                    };
+                    Repository.Add(objUser);
+                }
+                await UnitOfWork.SaveChangesAsync();
+                user.Password = null;
+                return user;
+            }
+            return null;
+        }
+
+
         public async Task<UserDTO> GetUserAsync(string email, string password)
         {
             try
