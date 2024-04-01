@@ -26,9 +26,13 @@ namespace Shoping.Business
             var user = JsonConvert.DeserializeObject<UserDTO>(jsonUser);
             if (user != null)
             {
-                var objUser = await Repository.GetOneAsync(x => x.RecID == user.RecID);
+                var objUser = await Repository.GetOneAsync(x => x.Email == user.Email);
                 if (objUser != null)
                 {
+                    if (objUser.RecID != user.RecID)
+                    {
+                        return null;
+                    }
                     objUser.IsTrial = user.IsTrial;
                     objUser.ModifiedOn = user.ModifiedOn;
                     objUser.ModifiedBy = user.ModifiedBy;
